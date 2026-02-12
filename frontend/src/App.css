@@ -1,0 +1,306 @@
+/* ========= Global Styles ========= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ========= Navbar ========= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+}
+
+.navbar .brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #00c49f;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #fff;
+}
+
+.nav-links .user-email {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.nav-links button {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #ddd;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-links button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========= Auth forms ========= */
+.auth-form {
+  max-width: 400px;
+  margin: 3rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form h2 {
+  margin-bottom: 0.5rem;
+}
+
+.auth-form .hint {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.auth-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-form label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.auth-form input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.auth-form button {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  background: #0088fe;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: #006ed4;
+}
+
+.auth-form p {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ========= Consent banner ========= */
+.consent-banner {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.consent-banner h3 {
+  margin-bottom: 0.5rem;
+}
+
+.consent-banner p {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.consent-banner button {
+  padding: 0.5rem 1.25rem;
+  background: #00c49f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.consent-banner button:hover {
+  background: #00a87d;
+}
+
+/* ========= Usage Log Form ========= */
+.usage-log-form {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.usage-log-form h3 {
+  margin-bottom: 1rem;
+}
+
+.usage-log-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.usage-log-form input,
+.usage-log-form select,
+.usage-log-form textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.usage-log-form label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.usage-log-form button {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  background: #0088fe;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.usage-log-form button:hover {
+  background: #006ed4;
+}
+
+/* ========= Usage Log List ========= */
+.usage-log-list {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.usage-log-list h3 {
+  margin-bottom: 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters input,
+.filters select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.filters label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.filters button {
+  padding: 0.4rem 1rem;
+  background: #0088fe;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background: #006ed4;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f0f0f0;
+  font-weight: 600;
+}
+
+/* ========= Dashboard ========= */
+.dashboard h2 {
+  margin-bottom: 1rem;
+}
+
+.dashboard section {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard section h3 {
+  margin-bottom: 1rem;
+}
+
+/* ========= Feedback ========= */
+.error {
+  color: #d32f2f;
+  background: #fdecea;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.success {
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
