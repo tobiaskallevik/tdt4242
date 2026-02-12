@@ -8,17 +8,10 @@ const { User, PasswordResetToken } = require('../models');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Solves Req 1 – Student account creation linked to university email
+// Solves Req 1 – Student account creation
 const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    // Validate university email domain
-    if (!email || !email.endsWith('.edu') && !email.endsWith('.no') && !email.includes('.ac.')) {
-      return res.status(400).json({
-        error: 'A valid university email address is required',
-      });
-    }
 
     const existing = await User.findOne({ where: { email } });
     if (existing) {
@@ -79,21 +72,28 @@ const forgotPassword = async (req, res, next) => {
 
     await PasswordResetToken.create({ user_id: user.id, token, expires_at });
 
-    // Send email with reset link
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-    });
-
     const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
 
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: email,
-      subject: 'AI Guidebook – Password Reset',
-      text: `Reset your password using this link (valid for 1 hour): ${resetUrl}`,
-    });
+    // Always log to console so devs can use the link directly
+    console.log(`[Password Reset] ${email} → ${resetUrl}`);
+
+    // Attempt to send email – skip silently if SMTP is not configured
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      });
+
+      await transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: email,
+        subject: 'AI Guidebook – Password Reset',
+        text: `Reset your password using this link (valid for 1 hour): ${resetUrl}`,
+      });
+    } catch (mailErr) {
+      console.warn('[Password Reset] Email sending failed:', mailErr.message);
+    }
 
     return res.json({ message: 'If the email exists, a reset link has been sent.' });
   } catch (err) {
