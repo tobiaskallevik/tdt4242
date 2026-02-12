@@ -4,6 +4,24 @@
 const { Op, fn, col, literal } = require('sequelize');
 const { UsageLog } = require('../models');
 
+// Build a where clause from common filter query params
+// Solves Req 6 – filtering by course, task type, ai tool, and time period
+const buildWhere = (userId, query) => {
+  const where = { user_id: userId };
+  const { course_code, task_type, ai_tool, from, to } = query;
+
+  if (course_code) where.course_code = course_code;
+  if (task_type) where.task_type = task_type;
+  if (ai_tool) where.ai_tool = ai_tool;
+  if (from || to) {
+    where.created_at = {};
+    if (from) where.created_at[Op.gte] = new Date(from);
+    if (to) where.created_at[Op.lte] = new Date(to);
+  }
+
+  return where;
+};
+
 // Create a new usage log entry
 const createLog = async (req, res, next) => {
   try {
@@ -28,17 +46,7 @@ const createLog = async (req, res, next) => {
 // Solves Req 6 – filtering by course, task type, and time period
 const getMyLogs = async (req, res, next) => {
   try {
-    const where = { user_id: req.user.id };
-    const { course_code, task_type, ai_tool, from, to } = req.query;
-
-    if (course_code) where.course_code = course_code;
-    if (task_type) where.task_type = task_type;
-    if (ai_tool) where.ai_tool = ai_tool;
-    if (from || to) {
-      where.created_at = {};
-      if (from) where.created_at[Op.gte] = new Date(from);
-      if (to) where.created_at[Op.lte] = new Date(to);
-    }
+    const where = buildWhere(req.user.id, req.query);
 
     const logs = await UsageLog.findAll({
       where,
@@ -67,15 +75,10 @@ const getLogsByUser = async (req, res, next) => {
 };
 
 // Solves Req 4 – Dashboard: frequency of prompts over time (grouped by day)
+// Solves Req 6 – supports course, task type, ai tool, and time filters
 const getFrequencyOverTime = async (req, res, next) => {
   try {
-    const where = { user_id: req.user.id };
-    const { from, to } = req.query;
-    if (from || to) {
-      where.created_at = {};
-      if (from) where.created_at[Op.gte] = new Date(from);
-      if (to) where.created_at[Op.lte] = new Date(to);
-    }
+    const where = buildWhere(req.user.id, req.query);
 
     const data = await UsageLog.findAll({
       attributes: [
@@ -95,14 +98,17 @@ const getFrequencyOverTime = async (req, res, next) => {
 };
 
 // Solves Req 5 – Breakdown by AI tool category (LLM, image gen, code assistant)
+// Solves Req 6 – supports course, task type, and time filters
 const getBreakdownByTool = async (req, res, next) => {
   try {
+    const where = buildWhere(req.user.id, req.query);
+
     const data = await UsageLog.findAll({
       attributes: [
         'ai_tool',
         [fn('COUNT', col('id')), 'count'],
       ],
-      where: { user_id: req.user.id },
+      where,
       group: ['ai_tool'],
       raw: true,
     });
@@ -113,14 +119,17 @@ const getBreakdownByTool = async (req, res, next) => {
 };
 
 // Solves Req 5 – Breakdown by context/task type (debugging, writing, research)
+// Solves Req 6 – supports course, ai tool, and time filters
 const getBreakdownByTaskType = async (req, res, next) => {
   try {
+    const where = buildWhere(req.user.id, req.query);
+
     const data = await UsageLog.findAll({
       attributes: [
         'task_type',
         [fn('COUNT', col('id')), 'count'],
       ],
-      where: { user_id: req.user.id },
+      where,
       group: ['task_type'],
       raw: true,
     });
