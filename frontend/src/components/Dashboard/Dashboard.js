@@ -1,6 +1,6 @@
 // Dashboard component – visualises AI usage frequency and breakdowns
 // Solves Req 4 (frequency over time), Req 5 (breakdown by category and context),
-// Req 6 (filtering by time period)
+// Req 6 (filtering by course, task type, ai tool, and time period)
 import React, { useState, useEffect } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -13,24 +13,42 @@ import {
 } from '../../services/usageLogService';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28AFF'];
+const AI_TOOLS = ['LLM', 'Image Generation', 'Code Assistant'];
+const TASK_TYPES = ['Debugging', 'Writing', 'Research'];
 
 const Dashboard = () => {
   const [frequency, setFrequency] = useState([]);
   const [byTool, setByTool] = useState([]);
   const [byTask, setByTask] = useState([]);
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
+
+  // Solves Req 6 – filter state for course, task type, ai tool, and time period
+  const [filters, setFilters] = useState({
+    course_code: '',
+    task_type: '',
+    ai_tool: '',
+    from: '',
+    to: '',
+  });
+
+  const handleChange = (e) =>
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+
+  const buildParams = () => {
+    const params = {};
+    Object.entries(filters).forEach(([key, val]) => {
+      if (val) params[key] = val;
+    });
+    return params;
+  };
 
   const fetchData = async () => {
     try {
-      const params = {};
-      if (from) params.from = from;
-      if (to) params.to = to;
+      const params = buildParams();
 
       const [freqRes, toolRes, taskRes] = await Promise.all([
         getFrequencyOverTime(params),
-        getBreakdownByTool(),
-        getBreakdownByTaskType(),
+        getBreakdownByTool(params),
+        getBreakdownByTaskType(params),
       ]);
 
       setFrequency(freqRes.data.map((d) => ({ ...d, count: Number(d.count) })));
@@ -49,12 +67,30 @@ const Dashboard = () => {
     <div className="dashboard">
       <h2>Dashboard</h2>
 
-      {/* Solves Req 6 – time-period filter */}
+      {/* Solves Req 6 – filtering by course, task type, ai tool, and time period */}
       <div className="filters">
+        <input
+          name="course_code"
+          placeholder="Course code"
+          value={filters.course_code}
+          onChange={handleChange}
+        />
+        <select name="ai_tool" value={filters.ai_tool} onChange={handleChange}>
+          <option value="">All AI Tools</option>
+          {AI_TOOLS.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+        <select name="task_type" value={filters.task_type} onChange={handleChange}>
+          <option value="">All Task Types</option>
+          {TASK_TYPES.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
         <label>From</label>
-        <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
+        <input type="date" name="from" value={filters.from} onChange={handleChange} />
         <label>To</label>
-        <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+        <input type="date" name="to" value={filters.to} onChange={handleChange} />
         <button onClick={fetchData}>Apply</button>
       </div>
 

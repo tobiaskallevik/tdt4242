@@ -1,5 +1,5 @@
 // Register component – student account creation
-// Solves Req 1 (student account creation linked to university email)
+// Solves Req 1 (student account creation)
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../../services/authService';
@@ -27,8 +27,6 @@ const Register = () => {
   return (
     <div className="auth-form">
       <h2>Create Account</h2>
-      {/* Solves Req 1 – university email requirement */}
-      <p className="hint">Use your university email address (.edu / .no / .ac.*)</p>
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
       <form onSubmit={handleSubmit}>

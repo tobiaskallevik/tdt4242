@@ -9,8 +9,8 @@ export const getMyUsageLogs = (params) => api.get('/usage-logs', { params });
 export const getFrequencyOverTime = (params) =>
   api.get('/usage-logs/analytics/frequency', { params });
 
-export const getBreakdownByTool = () =>
-  api.get('/usage-logs/analytics/by-tool');
+export const getBreakdownByTool = (params) =>
+  api.get('/usage-logs/analytics/by-tool', { params });
 
-export const getBreakdownByTaskType = () =>
-  api.get('/usage-logs/analytics/by-task');
+export const getBreakdownByTaskType = (params) =>
+  api.get('/usage-logs/analytics/by-task', { params });
